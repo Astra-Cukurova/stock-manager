@@ -49,14 +49,16 @@ void CLICommandPattern::Run() {
 	}
 }
 
-bool CLICommandPattern::CheckPassword(std::string_view password) {
-	if (password == this->password)
-		return true;
-	else
-		return false;
+void CLICommandPattern::SetHashedResult(std::string_view hash, std::string_view salt) {
+	this->HashedResult.hash = hash;
+	this->HashedResult.salt = salt;
 }
-void CLICommandPattern::SetPassword(std::string_view password) {
-	this->password = password;
+
+std::string CLICommandPattern::GetHash() {
+	return this->HashedResult.hash;
+}
+std::string CLICommandPattern::GetSalt() {
+	return this->HashedResult.salt;
 }
 
 std::string_view CLICommandPattern::GetCurrentMode() {

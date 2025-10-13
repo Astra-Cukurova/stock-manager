@@ -13,7 +13,10 @@
 class CLICommandPattern {
 private:
 	std::string current_mode = "user";
-	std::string password = "";
+	struct {
+		std::string hash = "";
+		std::string salt = "";
+	} HashedResult;
 	std::unordered_map<std::string, std::unique_ptr<Command>> commands;
 
 	CLICommandPattern() = default; // private constructor
@@ -28,8 +31,9 @@ public:
 	void ShowPrompt();
 	void ProcessCommand(const std::string& input);
 	void Run();
-	bool CheckPassword(std::string_view password);
-	void SetPassword(std::string_view password);
+	void SetHashedResult(std::string_view hash, std::string_view salt);
+	std::string GetHash();
+	std::string GetSalt();
 	std::string_view GetCurrentMode();
 	void ChangeModeToUser();
 	void ChangeModeToAdmin();
