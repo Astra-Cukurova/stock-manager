@@ -3,7 +3,10 @@
 
 int main(void) {
 	std::cout << "This is Stock Manager from Astra-Cukurova!\n";
-	CLICommandPattern& cli = CLICommandPattern::GetInstance();
-	cli.Run();
+
+	// for CLI
+	CLICommandPattern& CLI = CLICommandPattern::GetInstance();
+	CLI.Run();
+
 	return 0;
 }

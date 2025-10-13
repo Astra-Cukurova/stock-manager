@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string_view>
 #include <unordered_map>
+#include <cstdlib>
 
 class Command {
 public:
@@ -23,6 +24,14 @@ class ExitCommand : public Command {
 };
 
 class EnableCommand : public Command {
+	void Execute() override;
+};
+
+class DisableCommand : public Command {
+	void Execute() override;
+};
+
+class ClearCommand : public Command {
 	void Execute() override;
 };
 
