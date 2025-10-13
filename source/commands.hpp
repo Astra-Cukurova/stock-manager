@@ -12,31 +12,31 @@
 class Command {
 public:
 	virtual ~Command() = default;
-	virtual void Execute() = 0;
+	virtual void Execute(const std::vector<std::string>& args) = 0;
 };
 
 class HelpCommand : public Command {
-	void Execute() override;
+	void Execute(const std::vector<std::string>& args) override;
 };
 
 class ExitCommand : public Command {
-	void Execute() override;
+	void Execute(const std::vector<std::string>& args) override;
 };
 
 class EnableCommand : public Command {
-	void Execute() override;
+	void Execute(const std::vector<std::string>& args) override;
 };
 
 class DisableCommand : public Command {
-	void Execute() override;
+	void Execute(const std::vector<std::string>& args) override;
 };
 
-class ResetPasswordCommand : public Command {
-	void Execute() override;
+class ResetCommand : public Command {
+	void Execute(const std::vector<std::string>& args) override;
 };
 
 class ClearCommand : public Command {
-	void Execute() override;
+	void Execute(const std::vector<std::string>& args) override;
 };
 
 #endif // COMMANDS_HPP

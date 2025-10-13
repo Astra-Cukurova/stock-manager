@@ -6,7 +6,7 @@ void CLICommandPattern::CommandPattern() {
 	commands["quit"] = std::make_unique<ExitCommand>();
 	commands["enable"] = std::make_unique<EnableCommand>();
 	commands["disable"] = std::make_unique<DisableCommand>();
-	commands["reset_pwd"] = std::make_unique<ResetPasswordCommand>();
+	commands["reset"] = std::make_unique<ResetCommand>();
 	commands["clear"] = std::make_unique<ClearCommand>();
 }
 
@@ -26,8 +26,14 @@ void CLICommandPattern::ProcessCommand(const std::string& input) {
 		return;
 	}
 
+	std::vector<std::string> args;
+	std::string arg;
+	while (ss >> arg) {
+		args.push_back(arg);
+	}
+
 	if (commands.count(command_name))
-		commands.at(command_name)->Execute();
+		commands.at(command_name)->Execute(args);
 	else
 		std::cout << "Unknown command: " << command_name << "\n";
 }
