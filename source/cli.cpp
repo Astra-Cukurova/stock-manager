@@ -1,58 +1,5 @@
 #include "cli.hpp"
 
-CLICommandPattern& CLI = CLICommandPattern::GetInstance();
-
-void HelpCommand::Execute() {
-	std::cout << "Help...\n";
-}
-
-void ExitCommand::Execute() {
-	std::cout << "Terminating...\n";
-	std::exit(0);
-}
-
-void EnableCommand::Execute() {
-	if (CLI.GetCurrentMode() == "user") {
-		std::string pwd;
-		std::cout << "Enter password: ";
-		std::getline(std::cin, pwd);
-		if (pwd == "123") {
-			CLI.ChangeModeToAdmin();
-		}
-		else {
-			std::cout << "Invalid password.\n";
-		}
-	}
-	else {
-		std::cout << "Mode is already 'admin'.\n";
-	}
-}
-
-void DisableCommand::Execute() {
-	if (CLI.GetCurrentMode() == "admin") {
-		std::string pwd;
-		std::cout << "Enter password: ";
-		std::getline(std::cin, pwd);
-		if (pwd == "321") {
-			CLI.ChangeModeToUser();
-		}
-		else {
-			std::cout << "Invalid password.\n";
-		}
-	}
-	else {
-		std::cout << "Mode is already 'user'.";
-	}
-}
-
-void ClearCommand::Execute() {
-#if defined(_WIN32) || defined(WIN32)
-	std::system("cls");
-#else
-	std::system("clear");
-#endif
-}
-
 void CLICommandPattern::CommandPattern() {
 	commands["help"] = std::make_unique<HelpCommand>();
 	commands["exit"] = std::make_unique<ExitCommand>();
@@ -63,12 +10,10 @@ void CLICommandPattern::CommandPattern() {
 }
 
 void CLICommandPattern::ShowPrompt() {
-	if (current_mode == "user") {
+	if (current_mode == "user")
 		std::cout << "user >> ";
-	}
-	else {
+	else
 		std::cout << "admin >> ";
-	}
 }
 
 void CLICommandPattern::ProcessCommand(const std::string& input) {
@@ -80,17 +25,16 @@ void CLICommandPattern::ProcessCommand(const std::string& input) {
 		return;
 	}
 
-	if (commands.count(command_name)) {
+	if (commands.count(command_name))
 		commands.at(command_name)->Execute();
-	}
-	else {
+	else
 		std::cout << "Unknown command: " << command_name << "\n";
-	}
 }
 
 void CLICommandPattern::Run() {
 	this->CommandPattern();
 	std::string input;
+
 	while (true) {
 		this->ShowPrompt();
 		std::getline(std::cin, input);
