@@ -31,6 +31,10 @@ class DisableCommand : public Command {
 	void Execute() override;
 };
 
+class ResetPasswordCommand : public Command {
+	void Execute() override;
+};
+
 class ClearCommand : public Command {
 	void Execute() override;
 };

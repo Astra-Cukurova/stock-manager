@@ -6,6 +6,7 @@ void CLICommandPattern::CommandPattern() {
 	commands["quit"] = std::make_unique<ExitCommand>();
 	commands["enable"] = std::make_unique<EnableCommand>();
 	commands["disable"] = std::make_unique<DisableCommand>();
+	commands["reset_pwd"] = std::make_unique<ResetPasswordCommand>();
 	commands["clear"] = std::make_unique<ClearCommand>();
 }
 
@@ -40,6 +41,16 @@ void CLICommandPattern::Run() {
 		std::getline(std::cin, input);
 		this->ProcessCommand(input);
 	}
+}
+
+bool CLICommandPattern::CheckPassword(std::string_view password) {
+	if (password == this->password)
+		return true;
+	else
+		return false;
+}
+void CLICommandPattern::SetPassword(std::string_view password) {
+	this->password = password;
 }
 
 std::string_view CLICommandPattern::GetCurrentMode() {
