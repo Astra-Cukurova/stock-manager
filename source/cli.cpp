@@ -34,7 +34,7 @@ void DisableCommand::Execute() {
 		std::cout << "Enter password: ";
 		std::getline(std::cin, pwd);
 		if (pwd == "321") {
-			CLI.ChangeModeToAdmin();
+			CLI.ChangeModeToUser();
 		}
 		else {
 			std::cout << "Invalid password.\n";
@@ -46,8 +46,11 @@ void DisableCommand::Execute() {
 }
 
 void ClearCommand::Execute() {
-	// For windows
+#if defined(_WIN32) || defined(WIN32)
 	std::system("cls");
+#else
+	std::system("clear");
+#endif
 }
 
 void CLICommandPattern::CommandPattern() {
