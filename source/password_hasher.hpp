@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-struct HashedResult {
+struct HashedPassword {
     std::string hash;
     std::string salt;
 };
 
-HashedResult create_password_hash(const std::string& password);
+HashedPassword create_password_hash(const std::string& password);
 
-bool verify_password(const std::string& password, const std::string& stored_hash, const std::string& stored_salt);
+bool verify_password(const std::string& password, HashedPassword hashed_password);
 
 #endif // PASSWORD_HASHER_HPP

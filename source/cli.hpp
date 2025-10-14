@@ -2,41 +2,52 @@
 #define CLI_HPP
 
 #include <iostream>
-#include <string>
-#include <memory>
-#include <sstream>
-#include <string_view>
-#include <unordered_map>
-#include <cstdlib>
-#include "commands.hpp"
+#include <functional>
+#include "password_hasher.hpp"
 
-class CLICommandPattern {
+enum UserMode { USER, ADMIN };
+
+class CLICore {
 private:
-	std::string current_mode = "user";
-	struct {
-		std::string hash = "";
-		std::string salt = "";
-	} HashedResult;
-	std::unordered_map<std::string, std::unique_ptr<Command>> commands;
-
-	CLICommandPattern() = default; // private constructor
-	CLICommandPattern(const CLICommandPattern&) = delete;
-	CLICommandPattern& operator=(const CLICommandPattern&) = delete;
+	bool status_flag;
+	UserMode user_mode;
+	HashedPassword hashed_password;
+	CLICore() = default; // Private Constructor
 public:
-	static CLICommandPattern& GetInstance() {
-		static CLICommandPattern instance;
+	// Singleton
+	CLICore(const CLICore&) = delete;
+	CLICore& operator=(const CLICore&) = delete;
+	static CLICore& GetInstance() {
+		static CLICore instance;
 		return instance;
 	}
-	void CommandPattern();
+	// Getters
+	bool GetStatusFlag();
+	UserMode GetUserMode();
+	HashedPassword GetHashedPassoword();
+	// Setters
+	void SetStatusFlag(bool status_flag);
+	void SetUserMode(UserMode user_mode);
+	void SetHashedPassword(HashedPassword hashed_password);
+	// Functions
+	void CLICoreInit();
+};
+
+class CLIShell {
+private:
+	CLICore& cli_core = CLICore::GetInstance();
 	void ShowPrompt();
 	void ProcessCommand(const std::string& input);
+	void Navigator(const std::string& command, const std::vector<std::string>& args);
+	std::string HiddenInput(const std::string& input_message);
+	void HelpFunc();
+	void ClearFunc();
+	void ExitFunc();
+	void EnableFunc(const std::vector<std::string>& args);
+	void DisableFunc();
+	void PasswordFunc(const std::vector<std::string>& args);
+public:
 	void Run();
-	void SetHashedResult(std::string_view hash, std::string_view salt);
-	std::string GetHash();
-	std::string GetSalt();
-	std::string_view GetCurrentMode();
-	void ChangeModeToUser();
-	void ChangeModeToAdmin();
 };
 
 #endif // CLI_HPP
