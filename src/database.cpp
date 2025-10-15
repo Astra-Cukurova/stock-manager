@@ -19,6 +19,8 @@ typedef class handle{
 private:
 	std::string product_name;
 	long prod_num;
+	class handle *left;
+	class handle *right;
 	Product *prod;
 	COLOR node_color;
 public:
