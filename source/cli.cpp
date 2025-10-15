@@ -24,13 +24,13 @@ void setEchoMode(bool enable) {
 #endif
 
 // For CLICore
-bool CLICore::GetStatusFlag() {
+bool CLICore::GetStatusFlag() const {
 	return this->status_flag;
 }
-UserMode CLICore::GetUserMode() {
+UserMode CLICore::GetUserMode() const {
 	return this->user_mode;
 }
-HashedPassword CLICore::GetHashedPassoword() {
+const HashedPassword& CLICore::GetHashedPassword() const {
 	return this->hashed_password;
 }
 void CLICore::SetStatusFlag(bool status_flag) {
@@ -39,13 +39,8 @@ void CLICore::SetStatusFlag(bool status_flag) {
 void CLICore::SetUserMode(UserMode user_mode) {
 	this->user_mode = user_mode;
 }
-void CLICore::SetHashedPassword(HashedPassword hashed_password) {
+void CLICore::SetHashedPassword(const HashedPassword& hashed_password) {
 	this->hashed_password = hashed_password;
-}
-void CLICore::CLICoreInit() {
-	this->status_flag = true;
-	this->user_mode = USER;
-	this->hashed_password = { "","" };
 }
 
 // For CLIShell
@@ -70,7 +65,6 @@ void CLIShell::ProcessCommand(const std::string& input) {
 	this->Navigator(command, args);
 }
 void CLIShell::Run() {
-	this->cli_core.CLICoreInit();
 	std::string input;
 	while (this->cli_core.GetStatusFlag()) {
 		this->ShowPrompt();
@@ -78,27 +72,27 @@ void CLIShell::Run() {
 		this->ProcessCommand(input);
 	}
 }
-void CLIShell::Navigator(const std::string& command, const std::vector<std::string>& args) {
-	if (command == "help") {
-		this->HelpFunc();
-	}
-	else if (command == "quit" || command == "exit") {
-		this->ExitFunc();
-	}
-	else if (command == "clear") {
-		this->ClearFunc();
-	}
-	else if (command == "enable") {
-		this->EnableFunc(args);
-	}
-	else if (command == "disable") {
-		this->DisableFunc();
-	}
-	else if (command == "password") {
-		this->PasswordFunc(args);
-	}
-	else std::cout << "Unknown command: " << command << "\n";
+
+CLIShell::CLIShell() {
+    command_map["help"]     = [this](const auto& args) { HelpFunc(args); };
+    command_map["clear"]    = [this](const auto& args) { ClearFunc(args); };
+    command_map["exit"]     = [this](const auto& args) { ExitFunc(args); };
+    command_map["quit"]     = [this](const auto& args) { ExitFunc(args); };
+    command_map["q"]        = [this](const auto& args) { ExitFunc(args); };
+    command_map["enable"]   = [this](const auto& args) { EnableFunc(args); };
+    command_map["disable"]  = [this](const auto& args) { DisableFunc(args); };
+    command_map["password"] = [this](const auto& args) { PasswordFunc(args); };
 }
+
+void CLIShell::Navigator(const std::string& command, const std::vector<std::string>& args) {
+    auto it = command_map.find(command);
+    if (it != command_map.end()) {
+        it->second(args); // Eşleşen fonksiyonu çağır
+    } else {
+        std::cout << "Unknown command: " << command << "\n";
+    }
+}
+
 std::string CLIShell::HiddenInput(const std::string& input_message) {
 	std::string input;
 	char ch;
@@ -137,71 +131,181 @@ std::string CLIShell::HiddenInput(const std::string& input_message) {
 	std::cout << std::endl;
 	return input;
 }
-void CLIShell::HelpFunc() {
-	std::cout << "Help function called.\n";
+
+bool CLIShell::ValidateCommand(const std::vector<std::string>& args, 
+                               UserMode required_mode, 
+                               size_t max_args, 
+                               const std::string& command_name, 
+                               const std::string& help_text) {
+    // Authentication Check
+    if (required_mode != BOTH && cli_core.GetUserMode() != required_mode) {
+    	std::cout << "Unauthorized access.\n";
+    	return false;
+	}
+    // Argument Size Check
+    if (args.size() > max_args) {
+        std::cout << "Error: Too many arguments. Use '" << command_name << " -h' for help.\n";
+        return false;
+    }
+    // Help (-h) Check
+    if (!args.empty() && args[0] == "-h") {
+        std::cout << help_text << std::endl;
+        return false;
+    }
+    return true;
 }
-void CLIShell::ClearFunc() {
+
+void CLIShell::PrintInvalidArgumentError(const std::string& command_name) {
+    std::cout << "Error: '" << command_name << "' command does not take any arguments.\n"
+              << "Use '" << command_name << " -h' for help.\n";
+}
+
+void CLIShell::HelpFunc(const std::vector<std::string>& args) {
+	std::string help_message =
+	"  'help'     - Prints the available commands for current user mode.\n";
+	
+	if (!ValidateCommand(args, BOTH, 1, "help", help_message)) return;
+
+	// If ValidateCommand passed and args is NOT empty, it's an invalid argument.
+    if (!args.empty()) {
+        PrintInvalidArgumentError("help");
+        return;
+    }
+
+	std::string message_both = "\n"
+	"'help'\n"
+	"'clear'\n"
+	"'exit'/'quit'/'q'\n"
+	"'enable'\n";
+	std::string message_admin =
+	"'disable'\n"
+	"'password'\n";
+	std::cout << message_both;
+
+	// If the user mode is ADMIN
+	if (this->cli_core.GetUserMode() == ADMIN) std::cout << message_admin;
+
+	std::cout << "For more information, '<command> -h'\n\n";
+}
+void CLIShell::ClearFunc(const std::vector<std::string>& args) {
+	std::string help_message = "\n"
+	"  'clear'     - Clears the terminal.\n";
+	
+	if (!ValidateCommand(args, BOTH, 1, "clear", help_message)) return;
+
+	// If ValidateCommand passed and args is NOT empty, it's an invalid argument.
+    if (!args.empty()) {
+        PrintInvalidArgumentError("clear");
+        return;
+    }
+
 #ifdef _WIN32
 	std::system("cls");
 #else
 	std::system("clear");
 #endif
 }
-void CLIShell::ExitFunc() {
-	std::cout << "Exit funciton called.\n";
+
+void CLIShell::ExitFunc(const std::vector<std::string>& args) {
+	std::string help_message = "\n"
+	"  'exit'     - Terminates the program.\n"
+	"  'quit'     - Terminates the program.\n"
+	"  'q'        - Terminates the program.\n";
+	
+	if (!ValidateCommand(args, BOTH, 1, "exit", help_message)) return;
+
+	// If ValidateCommand passed and args is NOT empty, it's an invalid argument.
+    if (!args.empty()) {
+        PrintInvalidArgumentError("exit/quit/q");
+        return;
+    }
 	this->cli_core.SetStatusFlag(false);
 }
+
 void CLIShell::EnableFunc(const std::vector<std::string>& args) {
-	if (this->cli_core.GetUserMode() == USER) {
-		if (this->cli_core.GetHashedPassoword().hash.empty()) {
-			this->cli_core.SetUserMode(ADMIN);
-			return;
-		}
-		std::string input;
-		if (!args.empty()) {
-			input = args[0];
-		}
-		else {
+    // Help message for the 'enable' command.
+    std::string help_message = "\n"
+        "  'enable'              - Prompts for a password to enter admin mode.\n"
+        "  'enable <password>'     - Tries to enter admin mode with the given password.";
+
+    // Perform pre-checks: authorization, argument count, and help flag.
+    if (!ValidateCommand(args, USER, 1, "enable", help_message)) {
+        return;
+    }
+
+    // Check if a password has been set for the system.
+    bool is_password_set = !this->cli_core.GetHashedPassword().hash.empty();
+
+    if (is_password_set) {
+        std::string input;
+        if (args.empty())
 			input = HiddenInput("Enter the password: ");
-		}
-		if (verify_password(input, this->cli_core.GetHashedPassoword())) {
-			this->cli_core.SetUserMode(ADMIN);
-		}
-		else {
-			std::cout << "Invalid password.\n";
-		}
-	}
-	else {
-		std::cout << "Mode is already 'admin'.\n";
-	}
+        else
+			input = args[0];
+
+        // Verify the provided password.
+        if (verify_password(input, this->cli_core.GetHashedPassword())) {
+            this->cli_core.SetUserMode(ADMIN);
+            std::cout << "Admin mode enabled.\n";
+        } else {
+            std::cout << "Invalid password.\n";
+        }
+    } else { // No password is set
+        if (args.empty()) {
+            // Correct usage: Allow entering admin mode with 'enable' if no password is set.
+            this->cli_core.SetUserMode(ADMIN);
+            std::cout << "Admin mode enabled. No password is set.\n";
+            std::cout << "It is recommended to set a password using the 'password' command.\n";
+        } else {
+            // Incorrect usage: User provided an argument when no password is set.
+            std::cout << "Error: No password has been set. "
+                      << "To enter admin mode, type 'enable' without arguments.\n";
+        }
+    }
 }
-void CLIShell::DisableFunc() {
-	if (this->cli_core.GetUserMode() == ADMIN)
-		this->cli_core.SetUserMode(USER);
-	else
-		std::cout << "Mode is already 'user'.\n";
+
+void CLIShell::DisableFunc(const std::vector<std::string>& args) {
+	std::string help_message = "\n"
+	"  'disable'         - Sets the user mode to 'user'.\n";
+	
+	if (!ValidateCommand(args, ADMIN, 1, "disable", help_message)) return;
+
+	// If ValidateCommand passed and args is NOT empty, it's an invalid argument.
+    if (!args.empty()) {
+        PrintInvalidArgumentError("disable");
+        return;
+    }
+
+	// Setting the user mode
+	this->cli_core.SetUserMode(USER);
 }
+
 void CLIShell::PasswordFunc(const std::vector<std::string>& args) {
-	if (this->cli_core.GetUserMode() == ADMIN) {
-		std::string password;
-		if (!args.empty()) {
-			password = args[0];
-		}
-		else {
-			std::cout << "Enter new password: ";
-			std::getline(std::cin, password);
-		}
-		try {
-			HashedPassword hashed_password = create_password_hash(password);
-			this->cli_core.SetHashedPassword(hashed_password);
-		}
-		catch (const std::exception& e) {
-			std::cerr << "Error: " << e.what() << std::endl;
-			return;
-		}
-			std::cout << "Password changed.\n";
-	}
-	else {
-		std::cout << "Unauthorized access.\n";
-	}
+	std::string help_message = "\n"
+	"  'password'                - Prompts for a new password interactively.\n"
+	"  'password <new_password>' - Sets the password directly.\n";
+
+	if (!ValidateCommand(args, ADMIN, 1, "password", help_message)) return;
+
+    // Setting the password
+    std::string password;
+    if (args.empty()) {
+        std::cout << "Enter new password: ";
+        std::getline(std::cin, password);
+    } else {
+        password = args[0];
+    }
+    // Forbid empty input
+    if (password.empty()) {
+        std::cout << "Error: Password cannot be empty.\n";
+        return;
+    }
+    // Set the hashed password
+    try {
+        HashedPassword hashed_password = create_password_hash(password);
+        this->cli_core.SetHashedPassword(hashed_password);
+        std::cout << "Password changed successfully.\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 }

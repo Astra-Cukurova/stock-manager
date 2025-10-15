@@ -1,10 +1,10 @@
-#include "password_hasher.hpp"
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <stdexcept>
+#include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <iostream>
+#include <stdexcept>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include "password_hasher.hpp"
 
 namespace {
     const int ITERATIONS = 600000;
