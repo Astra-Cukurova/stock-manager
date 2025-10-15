@@ -157,7 +157,14 @@ void CLIShell::EnableFunc(const std::vector<std::string>& args) {
 			this->cli_core.SetUserMode(ADMIN);
 			return;
 		}
-		if (verify_password(HiddenInput("Please enter the password: "), this->cli_core.GetHashedPassoword())) {
+		std::string input;
+		if (!args.empty()) {
+			input = args[0];
+		}
+		else {
+			input = HiddenInput("Enter the password: ");
+		}
+		if (verify_password(input, this->cli_core.GetHashedPassoword())) {
 			this->cli_core.SetUserMode(ADMIN);
 		}
 		else {
@@ -177,17 +184,22 @@ void CLIShell::DisableFunc() {
 void CLIShell::PasswordFunc(const std::vector<std::string>& args) {
 	if (this->cli_core.GetUserMode() == ADMIN) {
 		std::string password;
-		std::cout << "Enter new password: ";
-		std::getline(std::cin, password);
+		if (!args.empty()) {
+			password = args[0];
+		}
+		else {
+			std::cout << "Enter new password: ";
+			std::getline(std::cin, password);
+		}
 		try {
 			HashedPassword hashed_password = create_password_hash(password);
 			this->cli_core.SetHashedPassword(hashed_password);
 		}
 		catch (const std::exception& e) {
-			std::cerr << "Fatal Error: " << e.what() << std::endl;
+			std::cerr << "Error: " << e.what() << std::endl;
 			return;
 		}
-		std::cout << "Password changed.\n";
+			std::cout << "Password changed.\n";
 	}
 	else {
 		std::cout << "Unauthorized access.\n";
