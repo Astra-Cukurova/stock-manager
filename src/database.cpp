@@ -19,12 +19,17 @@ typedef class handle{
 private:
 	std::string product_name;
 	long prod_num;
+	PRODUCT *prod;
 	class handle *left;
 	class handle *right;
-	Product *prod;
 	COLOR node_color;
 public:
 	void set_name(void) { std::cin >> product_name; }
+	void set_node_color(COLOR a) { node_color = a; }
+	void set_prod(PRODUCT *a) { prod = a; }
+	void set_left(class handle *a) { left = a; }
+	void set_right(class handle *a) { right = a; }
+	void set_prod_num(long a) { prod_num = a; }
 } HANDLE;
 
 typedef enum color{
@@ -37,6 +42,13 @@ HANDLE *head = NULL;
 HANDLE *anchor = NULL;
 HANDLE *hook = NULL;
 
+HANDLE HANDLE_NIL; 	 // left pointer will be used to point to the root
+HANDLE_NIL.set_color(0); // the leaves of the binary tree will point to this
+			 // the other values of this node are meaningless
+			 // IT IS NEEDED
+
+int product_number = 0; // will increment this as we go
+
 int deleteProduct(PRODUCT *example_prod) { ;}
 PRODUCT *searchProduct() { ;}
 // not sure whether we should search by prod_num or name
@@ -48,6 +60,7 @@ int addProduct(std::string name)
 	// No need to overbloat this one
 	if (!head) {
 		head = new HANDLE;
+		HANDLE_NIL.set_left(head);
 		head->set_name;
 	} else {
 		//
