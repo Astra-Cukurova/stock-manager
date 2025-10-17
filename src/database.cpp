@@ -1,6 +1,14 @@
 #include "iostream"
 #include "fstream"
 #include "string"
+#ifdef _WIN32
+#include "stdafx.h"
+#endif
+
+typedef enum color{
+	BLACK = 0,
+	RED = 1
+} COLOR;
 
 typedef class product{
 private:
@@ -9,9 +17,10 @@ private:
 	long buy_value;
 	long amount;
 public:
-	void set_type(void) { cin >> type; }
-	void sell_value(long a) { sell_value = a; }
-	void buy_value(long a) { buy_value = a; }
+	~product() {};
+	void set_type(void) { std::cin >> type; }
+	void set_sell_value(long a) { sell_value = a; }
+	void set_buy_value(long a) { buy_value = a; }
 	void set_amount(long a) { amount = a; }
 } PRODUCT;
 
@@ -32,25 +41,26 @@ public:
 	void set_prod_num(long a) { prod_num = a; }
 } HANDLE;
 
-typedef enum color{
-	BLACK;
-	RED;
-} COLOR;
 
 const char *WAREHOUSE = "./DataBaseFile";
 HANDLE *head = NULL;
 HANDLE *anchor = NULL;
 HANDLE *hook = NULL;
 
-HANDLE HANDLE_NIL; 	 // left pointer will be used to point to the root
-HANDLE_NIL.set_color(0); // the leaves of the binary tree will point to this
-			 // the other values of this node are meaningless
-			 // IT IS NEEDED
-
 int product_number = 0; // will increment this as we go
 
-int deleteProduct(PRODUCT *example_prod) { ;}
-PRODUCT *searchProduct() { ;}
+// a dummy main just to compile
+// i cant believe that in 2025
+// we are still using a language
+// which needs an entrypoint 
+// oh fuck my life
+int main(void)
+{
+	return 0;
+}
+
+// int deleteProduct(PRODUCT *example_prod) { ;}
+// PRODUCT *searchProduct() { ;}
 // not sure whether we should search by prod_num or name
 // i guess we could just have cli function list to list them all
 
@@ -60,19 +70,21 @@ int addProduct(std::string name)
 	// No need to overbloat this one
 	if (!head) {
 		head = new HANDLE;
-		HANDLE_NIL.set_left(head);
-		head->set_name;
+		HANDLE endPoint;
+		endPoint.set_node_color(BLACK);
+		head->set_left(&endPoint);
+		head->set_right(&endPoint);
+		head->set_name();
 	} else {
 		//
 	}
+	return 0;
 }
 
 int createTree()
 {
-	// read from DataBaseFile at startup and create the tree
-	//
-	// possible optimization place but not now
 	std::ifstream inFile(WAREHOUSE);
+	return 0;
 }
 
 int dumpTree()
@@ -81,4 +93,5 @@ int dumpTree()
 	// and write an updated list of the products 
 	// at shutdown
 	std::ofstream outFile(WAREHOUSE);
+	return 0;
 }
