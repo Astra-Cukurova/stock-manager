@@ -10,6 +10,8 @@ typedef enum color{
 	RED = 1
 } COLOR;
 
+int product_number = 0; // will increment this as we go
+
 typedef class product{
 private:
 	std::string type;
@@ -33,6 +35,11 @@ private:
 	class handle *right;
 	COLOR node_color;
 public:
+	handle() :  product_name{}, 
+		prod_num{product_number}, 
+		prod{NULL}, 
+		left{NULL}, right{NULL}, 
+		node_color{BLACK} {}
 	void set_name(void) { std::cin >> product_name; }
 	void set_node_color(COLOR a) { node_color = a; }
 	void set_prod(PRODUCT *a) { prod = a; }
@@ -47,7 +54,6 @@ HANDLE *head = NULL;
 HANDLE *anchor = NULL;
 HANDLE *hook = NULL;
 
-int product_number = 0; // will increment this as we go
 
 // a dummy main just to compile
 // i cant believe that in 2025
