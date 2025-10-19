@@ -40,7 +40,7 @@ void initStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
 const char *WAREHOUSE = "./DataBaseFile";
 size_t productIndex{};
 size_t aisle{};
-
+/*
 int main(void)
 {
 	size_t userOp{};
@@ -71,6 +71,9 @@ int main(void)
 	return 0;
 }
 
+example
+
+*/
 void initStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE]) {
 	std::ifstream inFile(WAREHOUSE);
 	size_t i{}, j{};
