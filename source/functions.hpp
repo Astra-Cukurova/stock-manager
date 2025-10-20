@@ -13,11 +13,11 @@ private:
 public:
     static Account& GetInstance();
     double GetBalance() const;
-    void SetBalance(double newBalance);
+    void SetBalance(double new_balance);
     void Withdraw(double amount);
     void Deposit(double amount);
-    void BuyProduct(int count, double productPrice);
-    void SellProduct(int count, double productPrice);
+    void BuyProduct(int count, double new_balance);
+    void SellProduct(int count, double new_balance);
 
 };
 

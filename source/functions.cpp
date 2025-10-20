@@ -13,8 +13,8 @@ double Account::GetBalance() const {
     return balance;
 }
 
-void Account::SetBalance(double NewBalance){
-    balance = NewBalance;
+void Account::SetBalance(double new_balance){
+    balance = new_balance;
 }
 
 void Account::Withdraw(double amount) {
@@ -27,13 +27,13 @@ void Account::Deposit(double amount) {
     balance += amount;
 }
 
-void Account::BuyProduct(int count, double ProductPrice) {
-    double total = count * ProductPrice;
+void Account::BuyProduct(int count, double product_price) {
+    double total = count * product_price;
     if (balance - total >= 0.0) {
         balance -= total;
     }
 }
 
-void Account::SellProduct(int count, double ProductPrice) {
-    balance += (count * ProductPrice);
+void Account::SellProduct(int count, double product_price) {
+    balance += (count * product_price);
 }
