@@ -1,6 +1,6 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
-# include <iostream>
+#include <iostream>
 class Account {
 private:
     static Account* instance;
@@ -9,7 +9,6 @@ private:
     Account() = default;
     Account(const Account&) = delete;
     void operator=(const Account&) = delete;
-
 public:
     static Account& GetInstance();
     double GetBalance() const;
@@ -18,7 +17,6 @@ public:
     void Deposit(double amount);
     void BuyProduct(int count, double new_balance);
     void SellProduct(int count, double new_balance);
-
 };
 
 #endif
