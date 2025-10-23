@@ -6,12 +6,11 @@
 
 using namespace std;
 
+enum logLevel { DEBUG, INFO, WARNING, ERROR, CRITICAL };
+
 class Logger {
 private:
 	Logger() {}
-    enum logLevel { DEBUG, INFO, WARNING, ERROR, CRITICAL };
-
-	string filename = generateLogFilename();
 
 	void writeToFile(const string& message) {
 		ofstream file(filename, ios::app);
@@ -19,7 +18,11 @@ private:
 			file << message << "\n";
 		}
 	}
+
 public:
+
+	string filename = generateLogFilename();
+
 	static Logger& getInstance() {
 		static Logger instance;
 		return instance;
@@ -28,7 +31,7 @@ public:
 	void logTransaction(logLevel severity, string message) {
 		ostringstream oss;
 		oss << "[" << getTimeByDay() << "] "
-			<< "[" << severity << "] "
+			<< "[" << getLevelName(severity) << "] "
 			<< message ;
 		writeToFile(oss.str());
 	}
@@ -36,7 +39,7 @@ public:
 	void logTransaction(logLevel severity, string firstMessage, int data , string secondMessage) {
 		ostringstream oss;
 		oss << "[" << getTimeByDay() << "] "
-			<< "[" << severity << "] "
+			<< "[" << getLevelName(severity) << "] "
 			<< firstMessage
             << data
             << secondMessage ;
@@ -63,6 +66,7 @@ public:
     	oss << "log_" << put_time(localtime(&t), "%Y-%m-%d") << ".txt";
    	 	return oss.str();
 	}
+
     string getLevelName(logLevel level) {
         switch (level) {
             case DEBUG: return "DEBUG";
