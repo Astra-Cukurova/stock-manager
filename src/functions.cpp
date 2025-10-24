@@ -18,13 +18,13 @@ void Account::Deposit(double amount) {
     this->balance += amount;
 }
 
-void Account::BuyProduct(PRODUCT *product) {
-    double total = product->amount * product->buy_value;
+void Account::BuyProduct(int count, double product_price) {
+    double total = count * product_price;
     if (this->balance - total >= 0.0) {
         this->balance -= total;
     }
 }
 
-void Account::SellProduct(PRODUCT *product) {
-    this->balance += (product->amount * product->sell_value);
+void Account::SellProduct(int count, double product_price) {
+    this->balance += (count * product_price);
 }
