@@ -1,6 +1,9 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
-# include <iostream>
+#ifndef FUNCTIONS_HPP
+#define FUNCTIONS_HPP
+
+#include <iostream>
+#include "database.hpp"
+
 class Account {
 private:
     static Account* instance;
@@ -9,16 +12,17 @@ private:
     Account() = default;
     Account(const Account&) = delete;
     void operator=(const Account&) = delete;
-
 public:
-    static Account& GetInstance();
+	static Account& GetInstance() {
+		static Account instance;
+		return instance;
+	}
     double GetBalance() const;
     void SetBalance(double new_balance);
     void Withdraw(double amount);
     void Deposit(double amount);
-    void BuyProduct(int count, double new_balance);
-    void SellProduct(int count, double new_balance);
-
+    void BuyProduct(PRODUCT *product);
+    void SellProduct(PRODUCT *product);
 };
 
-#endif
+#endif // functions

@@ -1,13 +1,12 @@
-#include "password_hasher.hpp"
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <stdexcept>
+#include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <iostream>
+#include <stdexcept>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include "password_hasher.hpp"
 
 namespace {
-
     const int ITERATIONS = 600000;
     const int SALT_LEN = 16;
     const int KEY_LEN = 32;
@@ -47,7 +46,7 @@ namespace {
     }
 }
 
-HashedResult create_password_hash(const std::string& password) {
+HashedPassword create_password_hash(const std::string& password) {
     std::vector<unsigned char> salt_bytes(SALT_LEN);
     if (RAND_bytes(salt_bytes.data(), salt_bytes.size()) != 1) {
         throw std::runtime_error("Salt generation failed.");
@@ -58,11 +57,11 @@ HashedResult create_password_hash(const std::string& password) {
     return { hashed_password, to_hex(salt_bytes) };
 }
 
-bool verify_password(const std::string& password, const std::string& stored_hash, const std::string& stored_salt) {
+bool verify_password(const std::string& password, HashedPassword hashed_password) {
     try {
-        std::vector<unsigned char> salt_bytes = from_hex(stored_salt);
+        std::vector<unsigned char> salt_bytes = from_hex(hashed_password.salt);
         std::string new_hash = hash_internal(password, salt_bytes);
-        return new_hash == stored_hash;
+        return new_hash == hashed_password.hash;
     }
     catch (const std::exception& e) {
         std::cerr << "Verification error: " << e.what() << std::endl;

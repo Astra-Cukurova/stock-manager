@@ -1,14 +1,4 @@
-#include "Functions.hpp"
-#include "../src/database.hpp"
-
-Account* Account::instance = nullptr;
-
-Account& Account::GetInstance() {
-    if (this->instance == nullptr) {
-        this->instance = new Account();
-    }
-    return *(this->instance);
-}
+#include "functions.hpp"
 
 double Account::GetBalance() const {
     return this->balance;
