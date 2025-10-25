@@ -82,10 +82,9 @@ Raporlama, çoklu para birimi ve arayüz modülleri Python ile, kalan modüller 
 geliştirilmesi
     * Ürün yönetimi fonksiyonların yazılması ve veritabanı bağlantılarının kurulması
     * Günlük yönetimi fonksiyonlarının yazılması ve gerekli yerlere uygulanması
-* Aşama 3: Çoklu Dil Desteği, Raporlama ve Çoklu Para Birimi özelliklerinin eklenmesi
-    * Konsola dil desteği eklenmesi
+* Aşama 3: Arayüz, Raporlama ve Çoklu Para Birimi özelliklerinin eklenmesi
+    * Arayüz ve dil desteği eklenmesi
     * Raporlama fonksiyonlarının yazılması
     * Çoklu para birimi desteğinin eklenmesi
-* Aşama 4: Arayüz eklenmesi
 
-*Bu belge, 24.10.2025 tarihinde Süleyman Kara tarafından Astra-Cukurova adına güncellenmiştir.*
+*Bu belge, 25.10.2025 tarihinde Süleyman Kara tarafından Astra-Cukurova adına güncellenmiştir.*
