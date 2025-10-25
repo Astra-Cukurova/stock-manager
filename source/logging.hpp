@@ -14,7 +14,7 @@ class logger {
 
     string filename = generateLogFilename();
 
-    static Logger& getInstance();
+    static logger& getInstance();
 
     void logTransaction(logLevel severity, string message);
     void logTransaction(logLevel severity, string firstMessage, int data , string secondMessage);

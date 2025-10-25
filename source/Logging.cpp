@@ -8,36 +8,11 @@
 
 using namespace std;
 
-enum logLevel { INFO, WARNING, ERROR};
-
 string filename = generateLogFilename();
 
-class Logger {
-
-public:
-
-	static Logger& getInstance() {
-		static Logger instance;
-		return instance;
-	}
-
-};
-
-Logger::Logger() {
-}
-
-Logger& Logger::getInstance() {
-    static Logger instance;
+logger& logger::getInstance() {
+    static logger instance;
     return instance;
-}
-
-string getLevelName(logLevel level) {
-    switch (level) {
-        case INFO: return "INFO";
-        case WARNING: return "WARNING";
-        case ERROR: return "ERROR";
-        default: return "UNKNOWN";
-    }
 }
 
 string generateLogFilename() {
@@ -88,4 +63,13 @@ void writeToFile(const string& message) {
 	if (file.is_open()) {
 		file << message << "\n";
 	}
+}
+
+string getLevelName(logLevel level) {
+    switch (level) {
+        case INFO: return "INFO";
+        case WARNING: return "WARNING";
+        case ERROR: return "ERROR";
+        default: return "UNKNOWN";
+    }
 }
