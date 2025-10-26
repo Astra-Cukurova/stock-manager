@@ -2,31 +2,36 @@
 #define DATABASE_HPP
 
 #include <string>
-#include <cstddef>
 
 typedef class product {
-public:
+private:
     std::string name;
-    unsigned long long key;
     long amount;
     float buy_value;
     float sell_value;
     bool full;
-    product() :name{}, key{}, amount{}, buy_value{}, sell_value{}, full{} {}
+public:
+    product() :name{}, amount{}, buy_value{}, sell_value{}, full{} {}
     ~product() {}
-} PRODUCT;
+} Product;
 
-const size_t MARKET_CAP = 10;
-const size_t AISLE_SIZE = 30;
+const size_t MARKET_CAP = 26;
+const size_t AISLE_SIZE = 26;
 
-extern const char* WAREHOUSE;
-extern size_t productIndex;
-extern size_t aisle;
+// the previous array i passed as an
+// argument will now be global dont worry about it
+//
+// and also we dont need key just need the name
+// i will hash it with the string
 
-int searchProduct(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
-void deleteProduct(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
-void listProducts(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
-void addStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
-void initStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE]);
+int SearchProduct(std::string dummy_name);
+void DeleteProduct(std::string dummy_name);
+void UpdateStock(std::string dummy_name,
+		long amount_change)
+void AddStock(std::string dummy_name,
+		long amount,
+		float buy_value,
+		float sell_value);
+void InitStock();
 
 #endif
