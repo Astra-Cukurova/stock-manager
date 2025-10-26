@@ -26,7 +26,7 @@ const size_t AISLE_SIZE = 26;
 
 int SearchProduct(std::string dummy_name);
 void DeleteProduct(std::string dummy_name);
-void UpdateStock(std::string dummy_name,
+void UpdateStockAmount(std::string dummy_name,
 		long amount_change)
 void AddStock(std::string dummy_name,
 		long amount,
