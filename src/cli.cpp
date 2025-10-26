@@ -309,3 +309,66 @@ void CLIShell::PasswordFunc(const std::vector<std::string>& args) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
 }
+
+void CLIShell::ShowFunc(const std::vector<std::string>& args) {
+	std::string help_message = "\n"
+	"  'show'                      - Prompts for the choices interactively.\n"
+	"  'show balance'              - Shows the balance directly.\n"
+	"  'show product'              - Prompts for the product number.\n"
+	"  'show product <product_no>  - Shows the product directly.\n";
+
+	if (!ValidateCommand(args, BOTH, 3, "show", help_message)) return;
+
+	// Navigate the request
+	std::string choice = "";
+	if (args.empty()) {
+		std::string message =
+		"1: Balance\n"
+		"2: Product\n"
+		"Please enter the number of your choice >> ";
+		std::cout << message;
+		std::getline(std::cin, choice);
+
+		if (choice == "1") {
+			std::cout << "BALANCE";
+		} else if (choice == "2") {
+			ShowProductFunc(args);
+		} else {
+			std::cout << "Invalid choice.\n";
+		}
+	} else if (args.size() == 1) {
+		if ()
+	}
+
+	
+}
+
+void CLIShell::ShowProductFunc(const std::vector<std::string>& args) {
+	// If there is the 'product no' as an argument:
+	std::string product_no = 0;
+	if (args.size() == 3) {
+		product_no = args[2];
+		// SEARCH FOR THE PRODUCT
+	} else {
+		std::cout << "Please enter the product no >> ";
+		std::getline(std::cin, product_no);
+		// SEARCH FOR THE PRODUCT
+	}
+}
+
+void CLIShell::BalanceFunc(const std::vector<std::string>& args) {
+	std::string help_message = "\n"
+	"  'balance show'            - Prompts for a new password interactively.\n"
+	"  'password <new_password>' - Sets the password directly.\n"
+	"  'password <new_password>' - Sets the password directly.\n";
+	// Withdraw
+	// Deposit
+}
+
+void CLIShell::ProductFunc(const std::vector<std::string>& args) {
+	// Sell
+	// Buy
+	// Create
+	// Delete
+	// Update
+}

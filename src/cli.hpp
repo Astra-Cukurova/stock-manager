@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 #include "password_hasher.hpp"
+#include "functions.hpp"
 
 enum UserMode { USER, ADMIN, BOTH };
 
@@ -61,6 +62,10 @@ private:
 	void EnableFunc(const std::vector<std::string>& args);
 	void DisableFunc(const std::vector<std::string>& args);
 	void PasswordFunc(const std::vector<std::string>& args);
+	void ShowFunc(const std::vector<std::string>& args);
+	void ShowProductFunc(const std::vector<std::string>& args);
+	void BalanceFunc(const std::vector<std::string>& args);
+	void ProductFunc(const std::vector<std::string>& args);
 public:
 	CLIShell();
 	void Run();
