@@ -40,18 +40,14 @@ void InitStock() {
 	}
 }
 
-void UpdateStockAmount(std::string dummy_name, long amount_change)
-{
+void UpdateStockAmount(std::string dummy_name, long amount_change) {
 }
 
-void DeleteProduct(std::string dummy_name)
-{
+void DeleteProduct(std::string dummy_name) {
 }
 
-void AddStock(std::string dummy_name, long amount, float buy_value, float sell_value)
-{
+void AddStock(std::string dummy_name, long amount, float buy_value, float sell_value) {
 }
 
-Product *SearchProduct(std::string dummy_name);
-{
+Product *SearchProduct(std::string dummy_name) {
 }
