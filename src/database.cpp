@@ -1,120 +1,57 @@
 #include "database.hpp"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <cstring>
 
+const size_t ABC = 26;
 const char* WAREHOUSE = "./database.db";
-size_t productIndex{};
-size_t aisle{};
+Product arr[ABC][ABC];
+Product *iterator{};
+Product null_end;
 
-void initStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE]) {
-    std::ifstream inFile(WAREHOUSE);
-    size_t i{}, j{};
-    while (inFile >> arr[aisle][productIndex].name) {
-        for (size_t k = 0; k <= arr[aisle][productIndex].name.size(); k++) {
-            if ((arr[aisle][productIndex].name[k] >= 110 && arr[aisle][productIndex].name[k] <= 122)
-                || (arr[aisle][productIndex].name[k] >= 78 && arr[aisle][productIndex].name[k] <= 90)) {
-                arr[aisle][productIndex].key += 1;
-            }
-            arr[aisle][productIndex].key *= 10;
-        }
-        
-        arr[aisle][productIndex].full = 1;
-        inFile >> arr[aisle][productIndex].amount
-            >> arr[aisle][productIndex].sell_value
-            >> arr[aisle][productIndex].buy_value;
-        
-        productIndex++;
-        if (productIndex >= AISLE_SIZE) {
-            productIndex = 0;
-            aisle++;
-            if (aisle >= MARKET_CAP) break;
-        }
-    }
+void InitStock() {
+	std::memset(arr, 0, 26 * 26 * sizeof(Product));
+	std::ifstream in_file(WAREHOUSE);
+	std::string dummy_name;
+	long dummy_amount;
+	float dummy_buy;
+	float dummy_sell;
+	while (in_file >> dummy_name >> dummy_amount >> dummy_buy >> dummy_sell) {
+		if (!arr[dummy_name[0]][dummy_name[1]].exists()) {
+			arr[dummy_name[0]][dummy_name[1]].SetName(dummy_name);
+			arr[dummy_name[0]][dummy_name[1]].SetAmount(dummy_amount);
+			arr[dummy_name[0]][dummy_name[1]].SetBuyValue(dummy_buy);
+			arr[dummy_name[0]][dummy_name[1]].SetSellValue(dummy_sell);
+			arr[dummy_name[0]][dummy_name[1]].SetStock(1);
+			arr[dummy_name[0]][dummy_name[1]].SetNext(&null_end);
+		} else {
+			while (iterator->GetNext()) {
+				iterator = iterator->GetNext();
+			}
+			iterator->SetNext(new Product);
+			iterator = iterator->GetNext;
+			iterator->SetName(dummy_name);
+			iterator->SetAmount(dummy_amount);
+			iterator->SetBuyValue(dummy_buy);
+			iterator->SetSellValue(dummy_sell);
+			iterator->SetStock(1);
+		}
+	}
 }
 
-void addStock(PRODUCT arr[MARKET_CAP][AISLE_SIZE])
+void UpdateStockAmount(std::string dummy_name, long amount_change)
 {
-    if (aisle >= MARKET_CAP) {
-        std::cout << "Warehouse is full!" << std::endl;
-        return;
-    }
-
-    arr[aisle][productIndex].full = 1;
-    std::cout << "Enter the name of the product: ";
-    std::cin >> arr[aisle][productIndex].name;
-
-    arr[aisle][productIndex].key = 0;
-    for (size_t k = 0; k <= arr[aisle][productIndex].name.size(); k++) {
-        if ((arr[aisle][productIndex].name[k] >= 110 && arr[aisle][productIndex].name[k] <= 122)
-            || (arr[aisle][productIndex].name[k] >= 78 && arr[aisle][productIndex].name[k] <= 90)) {
-            arr[aisle][productIndex].key += 1;
-        }
-        arr[aisle][productIndex].key *= 10;
-    }
-
-    std::cout << "Enter the amount of the product: ";
-    std::cin >> arr[aisle][productIndex].amount;
-    std::cout << "Enter the sell value: ";
-    std::cin >> arr[aisle][productIndex].sell_value;
-    std::cout << "Enter the buy value: ";
-    std::cin >> arr[aisle][productIndex].buy_value;
-
-    productIndex++;
-    if (productIndex >= AISLE_SIZE) {
-        productIndex = 0;
-        aisle++;
-    }
 }
 
-void listProducts(PRODUCT arr[MARKET_CAP][AISLE_SIZE])
+void DeleteProduct(std::string dummy_name)
 {
-    for (size_t i = 0; i < MARKET_CAP; i++) {
-        for (size_t j = 0; j < AISLE_SIZE; j++) {
-            if (arr[i][j].full) {
-                std::cout << arr[i][j].key << '\t' << arr[i][j].name << '\n';
-            }
-        }
-    }
 }
 
-void deleteProduct(PRODUCT arr[MARKET_CAP][AISLE_SIZE])
+void AddStock(std::string dummy_name, long amount, float buy_value, float sell_value)
 {
-    unsigned long long dummyKey{};
-    std::cout << "Enter product key to delete item: ";
-    std::cin >> dummyKey;
-    
-    for (size_t i = 0; i < MARKET_CAP; i++) {
-        for (size_t j = 0; j < AISLE_SIZE; j++) {
-            if (arr[i][j].full && arr[i][j].key == dummyKey) {
-                arr[i][j].full = 0;
-                arr[i][j].name = "";
-                arr[i][j].key = 0;
-                arr[i][j].amount = 0;
-                std::cout << "Product deleted.\n";
-                return; 
-            }
-        }
-    }
-    std::cout << "Product not found.\n";
 }
 
-int searchProduct(PRODUCT arr[MARKET_CAP][AISLE_SIZE])
+Product *SearchProduct(std::string dummy_name);
 {
-    unsigned long long dummyKey{};
-    std::cout << "Enter the product key to search: ";
-    std::cin >> dummyKey;
-
-    for (size_t i = 0; i < MARKET_CAP; i++) {
-        for (size_t j = 0; j < AISLE_SIZE; j++) {
-            if (arr[i][j].full && arr[i][j].key == dummyKey) {
-                std::cout << "Name: " << arr[i][j].name << '\n'
-                    << "Amount: " << arr[i][j].amount << '\n'
-                    << "Sell Value: " << arr[i][j].sell_value << '\n'
-                    << "Buy Value: " << arr[i][j].buy_value << '\n';
-                return 0;
-            }
-        }
-    }
-    std::cout << "Your item does not exist.\n";
-    return 1;
 }
